@@ -2,24 +2,24 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema(
   {
-    name: String,
-    price: Number,
-    category: { type: String, enum: ["frames", "lights", "other"] },
-    rating: Number,
-    reviews: Number,
-    description: String,
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    categories: [{ type: String }], // ✅ changed from single category to array
+    rating: { type: Number, default: 0 },
+    reviews: { type: Number, default: 0 },
+    description: { type: String },
     specs: {
-      material: String,
-      dimensions: String,
-      weight: String,
-      power: String,
-      sensor: String,
-      colors: String,
-      features: [String],
+      material: { type: String },
+      dimensions: { type: String },
+      weight: { type: String },
+      power: { type: String },
+      sensor: { type: String },
+      colors: { type: String },
+      features: [{ type: String }],
     },
-    images: [String],
-    inStock: Boolean,
-    badge: String,
+    images: [{ type: String }], // ✅ array for multiple Cloudinary URLs
+    inStock: { type: Boolean, default: true },
+    badge: { type: String },
   },
   { timestamps: true }
 );
