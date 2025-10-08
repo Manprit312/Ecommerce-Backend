@@ -10,13 +10,15 @@ const seedData = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ MongoDB connected");
 
-    await Product.deleteMany(); // clear old data
-    console.log("🗑️ Old products removed");
+    // 🔥 Step 1: Clear existing data
+    await Product.deleteMany();
+    console.log("🧹 Existing products deleted");
 
+    // 🌱 Step 2: Insert fresh data
     await Product.insertMany(products);
     console.log("🌱 Products inserted successfully!");
 
-    process.exit();
+    process.exit(0);
   } catch (error) {
     console.error("❌ Seeding failed:", error);
     process.exit(1);
