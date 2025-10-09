@@ -9,10 +9,27 @@ import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 connectDB();
+const allowedOrigins = [
+  "http://localhost:3000",                   // local dev
+  "https://ecommerce-website-nine-orcin.vercel.app",      // your live frontend domain
+];
+
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 app.get("/", (req, res) => {

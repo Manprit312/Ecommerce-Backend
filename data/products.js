@@ -15,7 +15,7 @@
       dimensions: "28cm x 10cm x 23cm",
       features: ["LED Light", "Photo Frame", "Gift Ready"],
     },
-    images: [""], // ← Add Cloudinary URL here
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759901843/swanledphotoframs_x92deh.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983055/swanlamp3_pslnka.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983055/swanlamp2_nzba2j.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983055/swanlamp4_h8bkwa.jpg"], // ← Add Cloudinary URL here
     inStock: true,
     badge: "Bestseller",
   },
@@ -35,7 +35,7 @@
       power: "Battery Powered LED",
       features: ["LED Backlight", "Heart Design", "Romantic Gift"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759983235/crystalphoto_cvfpit.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983234/crystal2_kpzrgd.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983235/crystal4_lchpvp.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983234/crystal3_lpcoqh.jpg"],
     inStock: true,
   },
 
@@ -54,7 +54,7 @@
       power: "Rechargeable Battery",
       features: ["Touch Control", "16 Colors", "Portable"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759983565/moonlamp2_rlxq9t.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983565/moonlamp3_oroold.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983565/moonlamp2_rlxq9t.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983564/moonlamp1_thdonq.webp"],
     inStock: true,
   },
 
@@ -72,7 +72,8 @@
       power: "USB Powered",
       features: ["Gift Ready", "Multi-color Lights", "Elegant Packaging"],
     },
-    images: [""],
+           images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759984177/61rIqc5XqUL_gkzkba.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984178/61nc-2GDQTL_vwr0ff.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984182/61rIqc5XqUL._UF894_1000_QL80__y93m2r.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984183/61bVHCHDnoL._UF894_1000_QL80__kwlq82.jpg"],
+
     inStock: true,
   },
 
@@ -90,7 +91,7 @@
       capacity: "200ml",
       features: ["Aroma Therapy", "7 Color LED Lights", "Quiet Operation"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759898926/samples/coffee.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759898914/samples/food/spices.jpg"],
     inStock: true,
   },
   {
@@ -107,7 +108,7 @@
       power: "1500W",
       features: ["LED Heat Indicator", "Auto Shutoff", "Fast Boil"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759983684/ledkattle1_vaj9tg.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983685/ledkattle3_zn3f5h.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983685/ledkattle4_sbhdr0.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983685/ledlamp2_gs8foi.webp"],
     inStock: true,
   },
 
@@ -124,7 +125,7 @@
     specs: {
       features: ["Gift Box Packaging", "Mixed LED Products", "Elegant Design"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759983823/romatic1_wjboro.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983823/romantic4_pag11z.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983823/romantic3_n0r8uf.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759983822/romantic2_fr6m2n.webp"],
     inStock: true,
   },
   {
@@ -139,7 +140,7 @@
     specs: {
       features: ["Home Decor Essentials", "LED + Wood Mix", "Soft Ambience"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759898926/samples/coffee.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759898909/samples/food/pot-mussels.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759898914/samples/food/spices.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759898923/samples/breakfast.jpg"],
     inStock: true,
   },
 
@@ -158,7 +159,7 @@
       power: "USB Powered",
       features: ["Adjustable Arm", "Touch Control", "Eye Protection"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759984040/ledlampmin4_lxc0n7.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984036/ledlampmin3_vchwmr.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984035/ledlampmin2_boztrp.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984035/ledlampmin1_cmeuch.webp"],
     inStock: true,
   },
   {
@@ -175,7 +176,9 @@
       power: "USB Powered",
       features: ["Ambient Lighting", "Minimalist Design", "Soft Glow"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759984112/CARRFA-3D-Cat-Lamp-Retro-Stained-Pet-Themed-LED-Table-Lamps-with-Warm-Ambient-Glow-Gifts-for-Bedroom-Living-Room-Dining-Room-Office-Home-Decoration_78f03734-c4cf-48ca-8d8b-84994df0e9a7.54f635da831bf7c4f50c5a11206f02fa_izqke6.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984112/CARRFA-3D-Labrador-Lamp-Retro-Stained-Pet-Themed-LED-Table-Lamps-Warm-Ambient-Glow-Gifts-Bedroom-Living-Room-Dining-Room-Office-Home-Decoration_52eb1749-c00d-4b79-806a-71085f4d52f7.c87fd3b022a95858990e53b90188aff6_kvame7.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984112/CARRFA-3D-Labrador-Lamp-Retro-Stained-Pet-Themed-LED-Table-Lamps-Warm-Ambient-Glow-Gifts-Bedroom-Living-Room-Dining-Room-Office-Home-Decoration_52eb1749-c00d-4b79-806a-71085f4d52f7.c87fd3b022a95858990e53b90188aff6_kvame7.jpg",
+      'https://res.cloudinary.com/dnvhetnud/image/upload/v1759984116/71jVagV-X2L._UF894_1000_QL80__r6qfaw.jpg'
+    ],
     inStock: true,
   },
 
@@ -194,7 +197,9 @@
       connectivity: "Bluetooth 5.0",
       features: ["Music Sync Lights", "Touch Control", "Portable Design"],
     },
-    images: [""],
+        images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759984177/61rIqc5XqUL_gkzkba.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984178/61nc-2GDQTL_vwr0ff.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984182/61rIqc5XqUL._UF894_1000_QL80__y93m2r.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984183/61bVHCHDnoL._UF894_1000_QL80__kwlq82.jpg"],
+
+
     inStock: true,
   },
   {
@@ -211,7 +216,7 @@
       output: "15W Fast Charge",
       features: ["LED Ring Light", "Qi Compatible", "Minimal Design"],
     },
-    images: [""],
+     images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759984304/71pIiBEi0oL._UF894_1000_QL80__oqqtlq.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984309/15515_HYG_3-in-1_MFi_Wireless_Charging_Stand_BLACK_010_d2ckya.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984306/51SANvSQGYL_meukag.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984306/51SANvSQGYL_meukag.jpg"],
     inStock: true,
   },
 
@@ -229,7 +234,7 @@
       material: "Engraved Crystal",
       features: ["Customizable", "LED Base", "Gift Box"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759984356/81PmS6WAvvL_dnfcd1.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984357/H5f825f4f5f504abf8db7d0ef0e44d683O_f24zjs.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984360/51X2-HchI8L._UF894_1000_QL80__j1a0ul.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984361/Heart_Key_Chain_8fb0d055-0ba0-4d42-a742-04841f739b3a_gpgjqj.jpg"],
     inStock: true,
     badge: "Gift Pick",
   },
@@ -245,7 +250,7 @@
     specs: {
       features: ["Sound Reactive", "Photo Display", "Rechargeable"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759984424/Frame-6--2-_ts50jw.webp","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984425/71IfbCZkSOL_m5zgxq.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984427/719u35wVWuL._UF350_350_QL80__csjdbs.jpg"],
     inStock: true,
   },
 
@@ -264,7 +269,7 @@
       power: "AC Powered",
       features: ["Aura Glow", "Smart Dimming", "Premium Build"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759984522/SCUL0647_c6gvbg.png","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984528/Lumina_Pillar_Orb_Floor_Lamp__9_yosv6f.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984521/SCUL0650_ucudi0.png"],
     inStock: true,
   },
   {
@@ -280,7 +285,120 @@
       brand: "GlowArt",
       features: ["Artistic Light Design", "Low Power Use"],
     },
-    images: [""],
+    images: ["https://res.cloudinary.com/dnvhetnud/image/upload/v1759984574/Modern-Wallpaper-Murals-3D-Glow-Art-Blacklight-Mystery-Mural-Peel-Stick-Removable-Self-Adhesive-PVC-Wall-Stickers-Nursery-Kids-Bedroom-TV-Wall-Decor_c89048cd-e607-4b0a-ba6e-6397760157c2.1e7aabe910ff69ffa6dc42a9ef0e07f1_rx9xal.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984574/Modern-Wallpaper-Murals-3D-Glow-Art-Blacklight-Mystery-Mural-Peel-Stick-Removable-Self-Adhesive-PVC-Wall-Stickers-Nursery-Kids-Bedroom-TV-Wall-Decor_c89048cd-e607-4b0a-ba6e-6397760157c2.1e7aabe910ff69ffa6dc42a9ef0e07f1_rx9xal.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984575/818-XvEcFjL._UF1000_1000_QL80__iwngxo.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759984575/818-XvEcFjL._UF1000_1000_QL80__iwngxo.jpg"],
     inStock: true,
   },
+  {
+  id: 21,
+  name: "Handmade Crochet Rose Purse",
+  price: 29.99,
+  categories: ["Crochet", "Fashion", "Gifts"],
+  rating: 4.9,
+  reviews: 120,
+  description:
+    "A delicate handmade crochet rose purse with floral design and green straps — perfect for casual outings or gifting.",
+  specs: {
+    material: "Cotton Yarn",
+    features: ["Handmade", "Eco-Friendly", "Unique Floral Design"],
+  },
+  images: [
+    "https://res.cloudinary.com/dnvhetnud/image/upload/v1759901843/handmadecrochetpurseblack_diat5e.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759901843/handmadecrochetpurse2_wugeqp.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759901843/handmadecrochetpurse_zzyofm.jpg"
+  ],
+  inStock: true,
+  badge: "Handcrafted",
+},
+{
+  id: 22,
+  name: "Crochet Fingerless Gloves – Rose Design",
+  price: 19.99,
+  categories: ["Crochet", "Winter", "Accessories"],
+  rating: 4.8,
+  reviews: 85,
+  description:
+    "Beautiful handmade crochet gloves featuring a rose motif — cozy, stylish, and perfect for chilly weather.",
+  specs: {
+    material: "Wool Yarn",
+    features: ["Soft Texture", "Flower Accent", "Fingerless Design"],
+  },
+  images: [
+    "https://res.cloudinary.com/dnvhetnud/image/upload/v1759901842/handmadecrochetgluves_ltpxxf.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759901842/handmadecrochetgloves_fq66qo.jpg"
+  ],
+  inStock: true,
+},
+{
+  id: 23,
+  name: "Crochet White Winter Gloves",
+  price: 18.99,
+  categories: ["Crochet", "Winter", "Accessories"],
+  rating: 4.7,
+  reviews: 76,
+  description:
+    "Soft white crochet gloves with a minimal design, handcrafted for comfort and warmth.",
+  specs: {
+    material: "Cotton Yarn",
+    features: ["Handmade", "Breathable", "Comfort Fit"],
+  },
+  images: [
+    "https://res.cloudinary.com/dnvhetnud/image/upload/v1759901842/handmadecrochetgluves_ltpxxf.jpg"
+  ],
+  inStock: true,
+},
+{
+  id: 24,
+  name: "Crochet Flower Keychain",
+  price: 9.99,
+  categories: ["Crochet", "Gifts", "Accessories"],
+  rating: 5.0,
+  reviews: 65,
+  description:
+    "Cute and colorful crochet flower keychains — add a touch of handmade charm to your keys or bags.",
+  specs: {
+    material: "Cotton Yarn",
+    features: ["Handcrafted", "Durable Keyring", "Gift Friendly"],
+  },
+  images: [
+    "https://res.cloudinary.com/dnvhetnud/image/upload/v1759901842/handmadecrochetkeychain_wgejwh.jpg",
+    "https://res.cloudinary.com/dnvhetnud/image/upload/v1759901842/handmadecrochetkeychain2_ndiddz.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759901843/handmadecrochetkeychains_jgt2mr.jpg"
+  ],
+  inStock: true,
+},
+{
+  id: 25,
+  name: "Floral Crochet Drawstring Pouch",
+  price: 24.99,
+  categories: ["Crochet", "Fashion", "Gifts"],
+  rating: 4.9,
+  reviews: 98,
+  description:
+    "Elegant handmade crochet pouch with multi-color flower detailing — perfect for makeup, coins, or accessories.",
+  specs: {
+    material: "Cotton Yarn",
+    features: ["Drawstring Closure", "Decorative Flowers", "Fully Handmade"],
+  },
+  images: [
+    "https://res.cloudinary.com/dnvhetnud/image/upload/v1759901843/handmadecrochetpurse2_wugeqp.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759901843/handmadecrochetpurse_zzyofm.jpg"
+
+  ],
+  inStock: true,
+},
+{
+  id: 26,
+  name: "Black Crochet Shoulder Bag",
+  price: 34.99,
+  categories: ["Crochet", "Fashion", "Bags"],
+  rating: 4.9,
+  reviews: 112,
+  description:
+    "Trendy black crochet shoulder bag with yellow detailing — handcrafted for both style and function.",
+  specs: {
+    material: "Cotton Yarn",
+    features: ["Spacious", "Handcrafted", "Lightweight"],
+  },
+  images: [
+    "https://res.cloudinary.com/dnvhetnud/image/upload/v1759901843/handmadecrochetpurseblack_diat5e.jpg","https://res.cloudinary.com/dnvhetnud/image/upload/v1759901843/handmadecrochetpurseblack_diat5e.jpg"
+  ],
+  inStock: true,
+  badge: "New Arrival",
+},
+
 ];
