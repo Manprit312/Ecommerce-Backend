@@ -12,7 +12,8 @@ import adminRoutes from "./routes/adminRoutes.js";
 dotenv.config();
 connectDB();
 const allowedOrigins = [
-  "http://localhost:3000",                   // local dev
+  "http://localhost:3000",   
+"https://ecommerce-admin-dashboard-seven.vercel.app",
   "https://ecommerce-website-nine-orcin.vercel.app",      // your live frontend domain
 ];
 
