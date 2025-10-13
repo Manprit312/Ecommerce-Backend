@@ -4,22 +4,22 @@ const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true },
-    categories: [{ type: String }], // ✅ changed from single category to array
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }], // ✅ linked to Category model
     rating: { type: Number, default: 0 },
     reviews: { type: Number, default: 0 },
     description: { type: String },
     specs: {
-      material: { type: String },
-      dimensions: { type: String },
-      weight: { type: String },
-      power: { type: String },
-      sensor: { type: String },
-      colors: { type: String },
-      features: [{ type: String }],
+      material: String,
+      dimensions: String,
+      weight: String,
+      power: String,
+      sensor: String,
+      colors: String,
+      features: [String],
     },
-    images: [{ type: String }], // ✅ array for multiple Cloudinary URLs
+    images: [String],
     inStock: { type: Boolean, default: true },
-    badge: { type: String },
+    badge: String,
   },
   { timestamps: true }
 );

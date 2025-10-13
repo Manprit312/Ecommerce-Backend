@@ -2,17 +2,24 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
-
 import userRoutes from "./routes/userRoutes.js";
+import sliderRoutes from "./routes/sliderRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import inquiryRoutes from "./routes/inquiryRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+
+
 
 
 dotenv.config();
 connectDB();
 const allowedOrigins = [
-  "http://localhost:3000",                   // local dev
+  "http://localhost:3000",  
+  "http://localhost:3001",              // local dev
   "https://ecommerce-website-nine-orcin.vercel.app",      // your live frontend domain
 ];
 
@@ -38,10 +45,18 @@ app.get("/", (req, res) => {
   res.send("Ecommerce Backend Running ✅");
 });
 
+
+
+
 // Routes
+app.use("/api/categories", categoryRoutes);
+app.use("/api/reports", reportRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/sliders", sliderRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
-app.use("/api/orders", orderRoutes);
+app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/admin", adminRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

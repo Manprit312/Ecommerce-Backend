@@ -1,22 +1,92 @@
 import Order from "../models/orderModel.js";
 
-// GET all orders
-export const getOrders = async (req, res) => {
+// ✅ Create a new order
+export const createOrder = async (req, res) => {
   try {
-    const orders = await Order.find().populate("user", "name email");
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const {
+      name,
+      email,
+      phone,
+      address,
+      city,
+      pincode,
+      items,
+      subtotal,
+      totalAmount,
+      paymentMethod,
+    } = req.body;
+
+    if (!name || !email || !phone || !address || !city || !pincode || !items) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const order = await Order.create({
+      customerName: name,
+      email,
+      phone,
+      address,
+      city,
+      pincode,
+      items,
+      subtotal,
+      totalAmount,
+      paymentMethod: paymentMethod || "Cash on Delivery",
+    });
+
+    res.status(201).json({
+      message: "✅ Order created successfully",
+      order,
+    });
+  } catch (error) {
+    console.error("Order creation error:", error);
+    res.status(500).json({ message: "Failed to create order", error: error.message });
   }
 };
 
-// POST create new order
-export const addOrder = async (req, res) => {
+// ✅ Get all orders (for Admin)
+export const getAllOrders = async (req, res) => {
   try {
-    const newOrder = new Order(req.body);
-    await newOrder.save();
-    res.status(201).json(newOrder);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch orders", error: error.message });
+  }
+};
+
+// ✅ Get single order (details)
+export const getOrderById = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    res.status(200).json(order);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch order", error: error.message });
+  }
+};
+
+// ✅ Update order status (Admin)
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    res.status(200).json(order);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update order", error: error.message });
+  }
+};
+
+// ✅ Delete order (Admin)
+export const deleteOrder = async (req, res) => {
+  try {
+    const order = await Order.findByIdAndDelete(req.params.id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    res.status(200).json({ message: "Order deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete order", error: error.message });
   }
 };

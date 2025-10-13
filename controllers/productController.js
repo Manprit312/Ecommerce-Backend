@@ -1,26 +1,45 @@
 import Product from "../models/productModel.js";
 import cloudinary from "../config/cloudinary.js";
 import fs from "fs";
+import Category from "../models/categoryModel.js";
 import streamifier from "streamifier";
 // ✅ GET all products (with optional category filter)
+
 export const getProducts = async (req, res) => {
   try {
     const { categories } = req.query;
     let filter = {};
 
     if (categories) {
-      const categoryArray = categories.split(",");
-      filter.categories = { $in: categoryArray };
+      // Support multiple categories like ?categories=Trending,Decor
+      const categoryNames = categories.split(",").map((c) => c.trim());
+
+      // 🔍 Find matching Category documents by name
+      const categoryDocs = await Category.find({
+        name: { $in: categoryNames },
+      });
+
+      if (!categoryDocs.length) {
+        // No category found => return empty array instead of 500
+        return res.status(200).json([]);
+      }
+
+      // ✅ Extract ObjectIds
+      const categoryIds = categoryDocs.map((cat) => cat._id);
+
+      // Filter products by matching category ObjectIds
+      filter.categories = { $in: categoryIds };
     }
 
-    const products = await Product.find(filter);
+    // ✅ Fetch products and populate categories
+    const products = await Product.find(filter).populate("categories");
+
     res.status(200).json(products);
   } catch (err) {
     console.error("❌ Error fetching products:", err.message);
     res.status(500).json({ message: "Server error while fetching products" });
   }
 };
-
 // ✅ GET single product by ID
 export const getProductById = async (req, res) => {
   try {
@@ -131,18 +150,25 @@ export const addProduct = async (req, res) => {
     }
 
     // Construct new product data
-    const productData = {
-      name,
-      price: parseFloat(price),
-      description,
-      categories: categories ? JSON.parse(categories) : [],
-      specs: specs ? JSON.parse(specs) : {},
-      rating: rating ? parseFloat(rating) : 0,
-      reviews: reviews ? parseInt(reviews) : 0,
-      inStock: inStock === "true" || inStock === true,
-      badge,
-      images: imageUrls,
-    };
+   let categoryIds = [];
+if (categories) {
+  const categoryNames = JSON.parse(categories); // ["Trending", "Romantic"]
+  const foundCategories = await Category.find({ name: { $in: categoryNames } });
+  categoryIds = foundCategories.map((cat) => cat._id);
+}
+
+const productData = {
+  name,
+  price: parseFloat(price),
+  description,
+  categories: categoryIds, // ✅ store ObjectIds dynamically
+  specs: specs ? JSON.parse(specs) : {},
+  rating: rating ? parseFloat(rating) : 0,
+  reviews: reviews ? parseInt(reviews) : 0,
+  inStock: inStock === "true" || inStock === true,
+  badge,
+  images: imageUrls,
+};
 
     // Save product
     const newProduct = new Product(productData);
