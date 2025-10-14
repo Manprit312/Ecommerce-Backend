@@ -52,15 +52,49 @@ export const getAllOrders = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch orders", error: error.message });
   }
 };
-
-// ✅ Get single order (details)
-export const getOrderById = async (req, res) => {
+export const getOrderDetails = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).json({ message: "Order not found" });
-    res.status(200).json(order);
+    const { id } = req.params;
+
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      order,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch order", error: error.message });
+    console.error("Error fetching order details:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to fetch order details", error: error.message });
+  }
+};
+
+// ✅ Get orders for a specific user
+export const getOrdersByUser = async (req, res) => {
+  try {
+    const { email } = req.params; // or use req.user.email if you use JWT middleware
+console.log(email)
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const orders = await Order.find({ email }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: orders.length,
+      orders,
+    });
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to fetch user orders", error: error.message });
   }
 };
 

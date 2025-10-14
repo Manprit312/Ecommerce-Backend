@@ -2,9 +2,10 @@ import express from "express";
 import {
   createOrder,
   getAllOrders,
-  getOrderById,
+  getOrdersByUser,
   updateOrderStatus,
   deleteOrder,
+  getOrderDetails
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -13,8 +14,9 @@ const router = express.Router();
 router.post("/", createOrder);
 
 // Admin
+router.get("/details/:id", getOrderDetails);
 router.get("/", getAllOrders);
-router.get("/:id", getOrderById);
+router.get("/:email", getOrdersByUser);
 router.put("/:id/status", updateOrderStatus);
 router.delete("/:id", deleteOrder);
 
