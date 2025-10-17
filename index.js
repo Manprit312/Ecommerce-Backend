@@ -19,6 +19,7 @@ dotenv.config();
 connectDB();
 const allowedOrigins = [
   "http://localhost:3000",   
+  "https://api.toggle.ltd",
     "http://localhost:3001",  
 "https://ecommerce-admin-dashboard-seven.vercel.app",
   "https://ecommerce-website-nine-orcin.vercel.app",  
