@@ -120,6 +120,7 @@ export const addProduct = async (req, res) => {
       reviews,
       inStock,
       badge,
+      stockQuantity, 
     } = req.body;
 
     // Handle Cloudinary uploads from buffers
@@ -168,6 +169,8 @@ const productData = {
   inStock: inStock === "true" || inStock === true,
   badge,
   images: imageUrls,
+  stockQuantity: Number(stockQuantity) || 0, // ✅ added
+
 };
 
     // Save product
@@ -202,6 +205,7 @@ export const updateProduct = async (req, res) => {
       rating,
       reviews,
       inStock,
+      stockQuantity,
       badge,
       existingImages, // from frontend (JSON string)
     } = req.body;
@@ -302,10 +306,16 @@ export const updateProduct = async (req, res) => {
         specs: parsedSpecs,
         rating: rating ? parseFloat(rating) : existingProduct.rating,
         reviews: reviews ? parseInt(reviews) : existingProduct.reviews,
-        inStock:
-          inStock !== undefined
-            ? inStock === "true" || inStock === true
-            : existingProduct.inStock,
+       stockQuantity:
+  stockQuantity !== undefined
+    ? Number(stockQuantity)
+    : existingProduct.stockQuantity,
+inStock:
+  stockQuantity !== undefined
+    ? Number(stockQuantity) > 0
+    : inStock !== undefined
+    ? inStock === "true" || inStock === true
+    : existingProduct.inStock,
         badge: badge || existingProduct.badge,
         images: updatedImages, // ✅ kept + new
       },

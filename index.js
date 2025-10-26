@@ -17,17 +17,29 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 
 dotenv.config();
 connectDB();
+
 const allowedOrigins = [
+  "https://aryastore-frontend-six.vercel.app",
+  "https://aryastore-website.vercel.app",
+  "https://ecommerce-admin-dashboard-seven.vercel.app",
+  "https://ecommerce-website-nine-orcin.vercel.app",
   "http://localhost:3000",   
-  "https://api.toggle.ltd",
-    "http://localhost:3001",  
-"https://ecommerce-admin-dashboard-seven.vercel.app",
-  "https://ecommerce-website-nine-orcin.vercel.app",  
-      // your live frontend domain
+  "http://localhost:3001"
 ];
 
-
 const app = express();
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 204
+  })
+);
+
+app.use(express.json());
 
 app.use(
   cors({
@@ -43,7 +55,10 @@ app.use(
 );
 
 app.use(express.json());
-
+app.use((req, res, next) => {
+  console.log('Origin:', req.headers.origin);
+  next();
+});
 app.get("/", (req, res) => {
   res.send("Ecommerce Backend Running ✅");
 });

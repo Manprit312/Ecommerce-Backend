@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import Product from "../models/productModel.js";
 
 // 🔹 Create or update user on Google login
 export const handleGoogleLogin = async (req, res) => {
@@ -66,5 +67,152 @@ export const deleteUser = async (req, res) => {
   } catch (error) {
     console.error("Delete user error:", error);
     res.status(500).json({ message: "Failed to delete user" });
+  }
+};
+
+
+// -----------------------------------------------------------------------------
+// 🛒 CART CONTROLLERS
+// -----------------------------------------------------------------------------
+
+// ✅ Add to Cart
+export const addToCart = async (req, res) => {
+  try {
+        console.log("hi")
+    const { uid, productId } = req.body;
+
+    if (!uid || !productId) {
+      return res.status(400).json({ message: "Missing user or product info" });
+    }
+
+    const user = await User.findOne({ uid });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+
+    if (product.stockQuantity <= 0) {
+      return res.status(400).json({ message: "Product is out of stock" });
+    }
+
+    // Check if product already in cart
+    const existingItem = user.cart.items.find(
+      (item) => item.productId.toString() === productId
+    );
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      user.cart.items.push({
+        productId: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.images?.[0],
+        quantity: 1,
+      });
+    }
+
+    // Recalculate total count
+    user.cart.totalCount = user.cart.items.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+
+    await user.save();
+
+    res.status(200).json({ message: "Item added to cart", cart: user.cart });
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    res.status(500).json({ message: "Server error adding to cart" });
+  }
+};
+
+// ✅ Remove Item from Cart
+export const removeFromCart = async (req, res) => {
+  try {
+    const { uid, productId } = req.body;
+
+    if (!uid || !productId) {
+      return res.status(400).json({ message: "Missing user or product ID" });
+    }
+
+    const user = await User.findOne({ uid });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    let itemRemoved = false;
+
+    // 🧩 Find the product in cart
+    user.cart.items = user.cart.items.map((item) => {
+      if (String(item.productId) === String(productId)) {
+        if (item.quantity > 1) {
+          // ➖ Decrease quantity by 1
+          item.quantity -= 1;
+        } else {
+          // 🚮 Remove item later
+          itemRemoved = true;
+          return null;
+        }
+      }
+      return item;
+    }).filter(Boolean); // removes null if deleted
+
+    // 🧮 Recalculate total count
+    user.cart.totalCount = user.cart.items.reduce(
+      (sum, item) => sum + (item.quantity || 0),
+      0
+    );
+
+    user.markModified("cart");
+    await user.save();
+
+    res.status(200).json({
+      message: itemRemoved
+        ? "Item removed completely from cart"
+        : "Item quantity decreased by 1",
+      cart: user.cart,
+    });
+  } catch (error) {
+    console.error("❌ Error removing from cart:", error);
+    res.status(500).json({ message: "Server error removing from cart" });
+  }
+};
+
+
+
+// ✅ Get User Cart (with populated products)
+export const getUserCart = async (req, res) => {
+  try {
+    const { uid } = req.params;
+
+    const user = await User.findOne({ uid }).populate(
+      "cart.items.productId",
+      "name price images inStock stockQuantity"
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ cart: user.cart });
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    res.status(500).json({ message: "Failed to fetch cart" });
+  }
+};
+
+// ✅ Clear Cart
+export const clearCart = async (req, res) => {
+  try {
+    const { uid } = req.body;
+    const user = await User.findOne({ uid });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.cart.items = [];
+    user.cart.totalCount = 0;
+
+    await user.save();
+    res.status(200).json({ message: "Cart cleared successfully", cart: user.cart });
+  } catch (error) {
+    console.error("Error clearing cart:", error);
+    res.status(500).json({ message: "Failed to clear cart" });
   }
 };
