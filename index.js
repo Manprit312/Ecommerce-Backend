@@ -11,7 +11,7 @@ import inquiryRoutes from "./routes/inquiryRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
-
+import serverless from "serverless-http"
 
 
 
@@ -20,6 +20,7 @@ connectDB();
 
 const allowedOrigins = [
   "https://aryastore-frontend-six.vercel.app",
+  "https://ecommerce-website-sage-theta.vercel.app",
   "https://aryastore-website.vercel.app",
   "https://ecommerce-admin-dashboard-seven.vercel.app",
   "https://ecommerce-website-nine-orcin.vercel.app",
@@ -76,5 +77,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/admin", adminRoutes);
-const PORT = process.env.PORT || 5080;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// const PORT = process.env.PORT || 5080;
+// app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+module.exports = app
+module.exports.handler = serverless(app);
