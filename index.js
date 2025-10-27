@@ -22,7 +22,7 @@ const allowedOrigins = [
   "https://ecommerce-website-sage-theta.vercel.app",
   "https://ecommerce-backend-ceu1.onrender.com",
   "https://aryastore-website.vercel.app",
-  "https://ecommerce-admin-dashboard-seven.vercel.app",
+"https://ecommerce-admin-dashboard-red-two.vercel.app",
   "https://ecommerce-website-nine-orcin.vercel.app",
   "http://localhost:3000",
   "http://localhost:3001"
