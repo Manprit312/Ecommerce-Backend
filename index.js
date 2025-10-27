@@ -79,5 +79,5 @@ app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/admin", adminRoutes);
 // const PORT = process.env.PORT || 5080;
 // app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-module.exports = app
-module.exports.handler = serverless(app);
+
+export default serverless(app);
