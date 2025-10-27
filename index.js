@@ -20,6 +20,7 @@ connectDB();
 const allowedOrigins = [
   "https://aryastore-frontend-six.vercel.app",
   "https://ecommerce-website-sage-theta.vercel.app",
+  "https://ecommerce-backend-ceu1.onrender.com",
   "https://aryastore-website.vercel.app",
   "https://ecommerce-admin-dashboard-seven.vercel.app",
   "https://ecommerce-website-nine-orcin.vercel.app",
