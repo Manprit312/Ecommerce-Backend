@@ -47,7 +47,7 @@ app.use(
 );
 
 // ✅ FIX: Use "/*" instead of "*" (compatible with Node 22)
-app.options("/*", cors());
+app.options(/.*/, cors());
 
 // Middleware
 app.use(express.json());
