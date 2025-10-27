@@ -1,16 +1,16 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "../config/db.js";
-import userRoutes from "../routes/userRoutes.js";
-import sliderRoutes from "../routes/sliderRoutes.js";
-import productRoutes from "../routes/productRoutes.js";
-import adminRoutes from "../routes/adminRoutes.js";
-import orderRoutes from "../routes/orderRoutes.js";
-import inquiryRoutes from "../routes/inquiryRoutes.js";
-import reportRoutes from "../routes/reportRoutes.js";
-import blogRoutes from "../routes/blogRoutes.js";
-import categoryRoutes from "../routes/categoryRoutes.js";
+import connectDB from "./config/db.js"
+import userRoutes from "./routes/userRoutes.js";
+import sliderRoutes from "./routes/sliderRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import inquiryRoutes from "./routes/inquiryRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 // ❌ Remove serverless-http for Render (used only on Vercel)
 // import serverless from "serverless-http";
 
