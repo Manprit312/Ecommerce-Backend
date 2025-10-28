@@ -8,10 +8,10 @@ router.get("/", getProducts);
 
 // ✅ Get single product by ID
 router.get("/:id", getProductById);
-router.post("/", upload.array("images", 24), addProduct);
+router.post("/", upload.array("images", 50), addProduct);
 
 // ✅ Add new product
-router.put("/:id", upload.array("images", 24), updateProduct);
+router.put("/:id", upload.array("images", 50), updateProduct);
 router.delete("/:id", deleteProduct);
 
 export default router;

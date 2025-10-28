@@ -153,9 +153,11 @@ export const addProduct = async (req, res) => {
     // Construct new product data
    let categoryIds = [];
 if (categories) {
-  const categoryNames = JSON.parse(categories); // ["Trending", "Romantic"]
-  const foundCategories = await Category.find({ name: { $in: categoryNames } });
-  categoryIds = foundCategories.map((cat) => cat._id);
+  const parsed = JSON.parse(categories);
+  categoryIds = Array.isArray(parsed) ? parsed : [parsed];
+
+
+
 }
 
 const productData = {
