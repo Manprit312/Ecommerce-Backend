@@ -18,7 +18,7 @@ dotenv.config();
 connectDB();
 
 const allowedOrigins = [
-  "https://ecommerce-website-eight-mu.vercel.app/",
+  "https://ecommerce-website-eight-mu.vercel.app",
   "https://ecommerce-website-git-main-manprit312s-projects.vercel.app/",
   "https://aryastore-frontend-six.vercel.app",
   "https://ecommerce-website-sage-theta.vercel.app",
