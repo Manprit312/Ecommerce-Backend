@@ -7,32 +7,29 @@ const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit per file
+    fileSize: 50 * 1024 * 1024, // increased to 50MB for large .glb files
   },
   fileFilter: (req, file, cb) => {
-    // Accept images only
-    if (file.mimetype.startsWith("image/")) {
+    // ✅ Allow images and .glb / .gltf 3D files
+    const allowedMimeTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/jpg",
+      "model/gltf-binary",   // .glb
+      "model/gltf+json",     // .gltf
+      "application/octet-stream", // sometimes used for .glb
+    ];
+
+    if (
+      allowedMimeTypes.includes(file.mimetype) ||
+      file.originalname.toLowerCase().endsWith(".glb") ||
+      file.originalname.toLowerCase().endsWith(".gltf")
+    ) {
       cb(null, true);
     } else {
-      cb(new Error("❌ Only image files are allowed!"), false);
+      cb(new Error("❌ Only image and .glb/.gltf files are allowed!"), false);
     }
   },
 });
-
 export default upload;
-
-/*
-✅ Usage Examples:
-
-1️⃣ Single image upload:
-   router.post("/upload", upload.single("image"), controllerFunc);
-
-2️⃣ Multiple images upload:
-   router.post("/upload", upload.array("images", 10), controllerFunc);
-
-3️⃣ Mixed fields (e.g. image + banner):
-   router.post("/upload", upload.fields([
-       { name: "image", maxCount: 1 },
-       { name: "banner", maxCount: 2 }
-   ]), controllerFunc);
-*/

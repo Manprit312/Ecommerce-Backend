@@ -2,7 +2,7 @@ import Product from "../models/productModel.js";
 import cloudinary from "../config/cloudinary.js";
 import fs from "fs";
 import Category from "../models/categoryModel.js";
-import streamifier from "streamifier";
+import { uploadFromBuffer } from "../utils/uploadFromBuffer.js";
 // ✅ GET all products (with optional category filter)
 
 export const getProducts = async (req, res) => {
@@ -94,22 +94,9 @@ export const deleteProduct = async (req, res) => {
 
 
 
-const uploadFromBuffer = (fileBuffer) => {
-  return new Promise((resolve, reject) => {
-    const uniqueName = `product_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
-    const stream = cloudinary.uploader.upload_stream(
-      { folder: "products", public_id: uniqueName, resource_type: "image", overwrite: false },
-      (error, result) => {
-        if (error) reject(error);
-        else resolve(result);
-      }
-    );
-    streamifier.createReadStream(fileBuffer).pipe(stream);
-  });
-};
+
 export const addProduct = async (req, res) => {
   try {
-    // Parse JSON fields that come as strings from FormData
     const {
       name,
       price,
@@ -120,74 +107,66 @@ export const addProduct = async (req, res) => {
       reviews,
       inStock,
       badge,
-      stockQuantity, 
+      stockQuantity,
     } = req.body;
 
-    // Handle Cloudinary uploads from buffers
     let imageUrls = [];
+    let model3DUrl = null;
 
     if (req.files && req.files.length > 0) {
-      console.log("📤 Uploading images:", req.files.map((f) => f.originalname));
+      console.log("📤 Uploading files:", req.files.map((f) => f.originalname));
 
       const uploads = await Promise.allSettled(
-        req.files
-          .filter((file) => file?.buffer && file.buffer.length > 0)
-          .map((file) => uploadFromBuffer(file.buffer))
+        req.files.map((file) =>
+          uploadFromBuffer(file.buffer, file.mimetype)
+        )
       );
 
-      // Log any failures
-      uploads.forEach((result, index) => {
-        if (result.status === "rejected") {
-          console.error(`❌ Failed to upload file ${req.files[index]?.originalname}:`, result.reason);
+      uploads.forEach((result, i) => {
+        if (result.status === "fulfilled" && result.value?.secure_url) {
+          const isGLB =
+            req.files[i].mimetype.includes("glb") ||
+            req.files[i].originalname.endsWith(".glb");
+
+          if (isGLB) model3DUrl = result.value.secure_url;
+          else imageUrls.push(result.value.secure_url);
+        } else if (result.status === "rejected") {
+          console.error(`❌ Failed upload: ${req.files[i].originalname}`);
         }
       });
-
-      // Extract successful uploads
-      imageUrls = uploads
-        .filter((result) => result.status === "fulfilled" && result.value?.secure_url)
-        .map((result) => result.value.secure_url);
-
-      console.log(`✅ Uploaded ${imageUrls.length}/${req.files.length} images successfully`);
     }
 
-    // Construct new product data
-   let categoryIds = [];
-if (categories) {
-  const parsed = JSON.parse(categories);
-  categoryIds = Array.isArray(parsed) ? parsed : [parsed];
+    let categoryIds = [];
+    if (categories) {
+      const parsed = JSON.parse(categories);
+      categoryIds = Array.isArray(parsed) ? parsed : [parsed];
+    }
 
+    const productData = {
+      name,
+      price: parseFloat(price),
+      description,
+      categories: categoryIds,
+      specs: specs ? JSON.parse(specs) : {},
+      rating: rating ? parseFloat(rating) : 0,
+      reviews: reviews ? parseInt(reviews) : 0,
+      inStock: inStock === "true" || inStock === true,
+      badge,
+      images: imageUrls,
+      stockQuantity: Number(stockQuantity) || 0,
+      model3D: model3DUrl,
+    };
 
-
-}
-
-const productData = {
-  name,
-  price: parseFloat(price),
-  description,
-  categories: categoryIds, // ✅ store ObjectIds dynamically
-  specs: specs ? JSON.parse(specs) : {},
-  rating: rating ? parseFloat(rating) : 0,
-  reviews: reviews ? parseInt(reviews) : 0,
-  inStock: inStock === "true" || inStock === true,
-  badge,
-  images: imageUrls,
-  stockQuantity: Number(stockQuantity) || 0, // ✅ added
-
-};
-
-    // Save product
     const newProduct = new Product(productData);
     await newProduct.save();
 
-    console.log("✅ Product created with", imageUrls.length, "images");
-
-    // Return final saved product
     res.status(201).json(newProduct);
   } catch (err) {
-    console.error("❌ Error adding product:", err.message);
+    console.error("❌ Error adding product:", err);
     res.status(400).json({ message: err.message });
   }
 };
+
 export const updateProduct = async (req, res) => {
   try {
     const productId = req.params.id;
@@ -197,7 +176,7 @@ export const updateProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Extract fields from FormData
+    // Extract fields
     const {
       name,
       price,
@@ -209,86 +188,63 @@ export const updateProduct = async (req, res) => {
       inStock,
       stockQuantity,
       badge,
-      existingImages, // from frontend (JSON string)
+      existingImages,
+      removeModel, // ✅ new flag from frontend
     } = req.body;
 
-    // ✅ Parse fields safely
     const parsedCategories = categories ? JSON.parse(categories) : existingProduct.categories;
     const parsedSpecs = specs ? JSON.parse(specs) : existingProduct.specs;
     const keptImages = existingImages ? JSON.parse(existingImages) : existingProduct.images;
 
-    let updatedImages = [...keptImages]; // start with kept ones
-
-    // ✅ Upload new images (if any)
+    let updatedImages = [...keptImages];
     let newImageUrls = [];
-    if (req.files && req.files.length > 0) {
-      console.log("📤 Uploading new images:", req.files.map((f) => f.originalname));
-      console.log("📋 Files info:", req.files.map(f => ({
-        name: f.originalname,
-        size: f.size,
-        mimetype: f.mimetype,
-        hasBuffer: !!f.buffer,
-        bufferLength: f.buffer?.length
-      })));
+    let newModelUrl = null;
 
-      const filesToUpload = req.files.filter((file) => file?.buffer && file.buffer.length > 0);
-      console.log(`🔍 Files to upload after filter: ${filesToUpload.length}/${req.files.length}`);
+  if (req.files && req.files.length > 0) {
+  console.log("🧾 Received files:", req.files.map(f => f.originalname));
 
-      const uploaded = await Promise.allSettled(
-        filesToUpload.map((file) => uploadFromBuffer(file.buffer))
-      );
+  const filesToUpload = req.files.filter(
+    (file) => (file?.buffer && file.buffer.length > 0) || file?.path
+  );
 
-      console.log("📦 Upload results:", uploaded.map((r, i) => ({
-        file: filesToUpload[i]?.originalname,
-        status: r.status,
-        hasValue: r.status === "fulfilled" && !!r.value,
-        hasSecureUrl: r.status === "fulfilled" && !!r.value?.secure_url,
-        error: r.status === "rejected" ? r.reason?.message : null
-      })));
+  const uploaded = await Promise.allSettled(
+    filesToUpload.map((file) => {
+      const is3D =
+        file.originalname.toLowerCase().endsWith(".glb") ||
+        file.originalname.toLowerCase().endsWith(".gltf");
 
-      // Log any upload failures
-      uploaded.forEach((result, index) => {
-        if (result.status === "rejected") {
-          console.error(`❌ Failed to upload file ${filesToUpload[index]?.originalname}:`, result.reason);
-        } else if (result.status === "fulfilled" && !result.value?.secure_url) {
-          console.warn(`⚠️ Upload succeeded but no secure_url for ${filesToUpload[index]?.originalname}:`, result.value);
-        }
-      });
+      const resourceType = is3D ? "raw" : "image"; // ✅ key difference
+      return uploadFromBuffer(file.buffer, resourceType);
+    })
+  );
 
-      // Extract successful uploads only
-      newImageUrls = uploaded
-        .filter((result) => result.status === "fulfilled" && result.value?.secure_url)
-        .map((result) => result.value.secure_url);
+  uploaded.forEach((result, i) => {
+    const file = filesToUpload[i];
+    if (result.status === "fulfilled" && result.value?.secure_url) {
+      const is3D =
+        file.originalname.toLowerCase().endsWith(".glb") ||
+        file.originalname.toLowerCase().endsWith(".gltf");
 
-      console.log("✅ New image URLs uploaded:", newImageUrls);
-      console.log(`📊 Upload results: ${newImageUrls.length}/${req.files.length} successful`);
-
-      if (newImageUrls.length > 0) {
-        // Combine kept images with new ones
-        const combined = [...keptImages, ...newImageUrls];
-        updatedImages = [...new Set(combined)]; // avoid duplicates
-        
-        console.log("🔍 DEBUG INFO:");
-        console.log("  - Kept images:", keptImages);
-        console.log("  - New images:", newImageUrls);
-        console.log("  - Combined before Set:", combined);
-        console.log("  - Final after Set:", updatedImages);
-        console.log("  - Length change:", combined.length, "->", updatedImages.length);
-      }
+      if (is3D) newModelUrl = result.value.secure_url;
+      else newImageUrls.push(result.value.secure_url);
     }
+  });
 
-    // ✅ Delete removed images from Cloudinary
+  if (newImageUrls.length > 0) {
+    updatedImages = [...new Set([...keptImages, ...newImageUrls])];
+  }
+}
+
+
+    // ✅ Handle removed images
     const removedImages = existingProduct.images.filter((img) => !keptImages.includes(img));
-
     if (removedImages.length > 0) {
-      console.log("🗑️ Deleting old Cloudinary images:", removedImages.length);
-
       await Promise.allSettled(
         removedImages.map(async (url) => {
           try {
             const parts = url.split("/");
-            const publicIdWithExt = parts.slice(-2).join("/"); // folder/file.jpg
-            const publicId = publicIdWithExt.replace(/\.[^/.]+$/, ""); // remove .jpg
+            const publicIdWithExt = parts.slice(-2).join("/");
+            const publicId = publicIdWithExt.replace(/\.[^/.]+$/, "");
             await cloudinary.uploader.destroy(publicId);
           } catch (err) {
             console.warn("⚠️ Failed to delete Cloudinary image:", err.message);
@@ -297,7 +253,34 @@ export const updateProduct = async (req, res) => {
       );
     }
 
-    // ✅ Update product in MongoDB
+    // ✅ Handle "Remove Model" request
+    if (removeModel === "true" && existingProduct.model3D) {
+      try {
+        console.log("🗑️ Removing 3D model as requested...");
+        const parts = existingProduct.model3D.split("/");
+        const publicIdWithExt = parts.slice(-2).join("/");
+        const publicId = publicIdWithExt.replace(/\.[^/.]+$/, "");
+        await cloudinary.uploader.destroy(publicId, { resource_type: "raw" });
+        existingProduct.model3D = null;
+      } catch (err) {
+        console.warn("⚠️ Failed to delete existing model:", err.message);
+      }
+    }
+
+    // ✅ If a new 3D model is uploaded, replace old one
+    if (newModelUrl && existingProduct.model3D) {
+      try {
+        console.log("🗑️ Deleting old 3D model (replacing with new one)...");
+        const parts = existingProduct.model3D.split("/");
+        const publicIdWithExt = parts.slice(-2).join("/");
+        const publicId = publicIdWithExt.replace(/\.[^/.]+$/, "");
+        await cloudinary.uploader.destroy(publicId, { resource_type: "raw" });
+      } catch (err) {
+        console.warn("⚠️ Failed to delete old model:", err.message);
+      }
+    }
+
+    // ✅ Final update in MongoDB
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
       {
@@ -308,28 +291,26 @@ export const updateProduct = async (req, res) => {
         specs: parsedSpecs,
         rating: rating ? parseFloat(rating) : existingProduct.rating,
         reviews: reviews ? parseInt(reviews) : existingProduct.reviews,
-       stockQuantity:
-  stockQuantity !== undefined
-    ? Number(stockQuantity)
-    : existingProduct.stockQuantity,
-inStock:
-  stockQuantity !== undefined
-    ? Number(stockQuantity) > 0
-    : inStock !== undefined
-    ? inStock === "true" || inStock === true
-    : existingProduct.inStock,
+        stockQuantity:
+          stockQuantity !== undefined
+            ? Number(stockQuantity)
+            : existingProduct.stockQuantity,
+        inStock:
+          stockQuantity !== undefined
+            ? Number(stockQuantity) > 0
+            : inStock !== undefined
+            ? inStock === "true" || inStock === true
+            : existingProduct.inStock,
         badge: badge || existingProduct.badge,
-        images: updatedImages, // ✅ kept + new
+        images: updatedImages,
+        model3D: newModelUrl
+          ? newModelUrl
+          : removeModel === "true"
+          ? null
+          : existingProduct.model3D,
       },
       { new: true }
     );
-
-    console.log({
-      keptImagesCount: keptImages.length,
-      newImagesUploaded: newImageUrls.length,
-      totalImagesAfter: updatedImages.length,
-      finalImages: updatedImages,
-    });
 
     res.status(200).json({
       message: "✅ Product updated successfully",
@@ -340,3 +321,4 @@ inStock:
     res.status(500).json({ message: err.message });
   }
 };
+
