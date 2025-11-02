@@ -24,7 +24,8 @@ const allowedOrigins = [
   "https://ecommerce-admin-dashboard-red-two.vercel.app",
   "https://ecommerce-website-nine-orcin.vercel.app",
   "http://localhost:3000",
-  "http://localhost:3001"
+  "http://localhost:3001",
+  "https://ecommerce-website-eight-mu.vercel.app/"
 ];
 
 const app = express();
