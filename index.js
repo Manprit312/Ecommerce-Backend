@@ -11,9 +11,8 @@ import inquiryRoutes from "./routes/inquiryRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
-// ❌ Remove serverless-http for Render (used only on Vercel)
-// import serverless from "serverless-http";
-
+import logoRoutes from "./routes/logoRoutes.js";
+import saleBannerRoutes from "./routes/saleBannerRoutes.js";
 dotenv.config();
 connectDB();
 
@@ -24,7 +23,7 @@ const allowedOrigins = [
   "https://ecommerce-website-sage-theta.vercel.app",
   "https://ecommerce-backend-ceu1.onrender.com",
   "https://aryastore-website.vercel.app",
-"https://ecommerce-admin-dashboard-red-two.vercel.app",
+  "https://ecommerce-admin-dashboard-red-two.vercel.app",
   "https://ecommerce-website-nine-orcin.vercel.app",
   "http://localhost:3000",
   "http://localhost:3001"
@@ -75,7 +74,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/admin", adminRoutes);
-
+app.use("/api/logo", logoRoutes);
+app.use("/api/sale-banner", saleBannerRoutes)
 // ✅ For Render: run the app directly
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

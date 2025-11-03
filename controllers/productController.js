@@ -108,6 +108,7 @@ export const addProduct = async (req, res) => {
       inStock,
       badge,
       stockQuantity,
+      offer,
     } = req.body;
 
     let imageUrls = [];
@@ -152,6 +153,7 @@ export const addProduct = async (req, res) => {
       reviews: reviews ? parseInt(reviews) : 0,
       inStock: inStock === "true" || inStock === true,
       badge,
+      offer,
       images: imageUrls,
       stockQuantity: Number(stockQuantity) || 0,
       model3D: model3DUrl,
@@ -189,6 +191,7 @@ export const updateProduct = async (req, res) => {
       stockQuantity,
       badge,
       existingImages,
+      offer,
       removeModel, // ✅ new flag from frontend
     } = req.body;
 
@@ -302,6 +305,7 @@ export const updateProduct = async (req, res) => {
             ? inStock === "true" || inStock === true
             : existingProduct.inStock,
         badge: badge || existingProduct.badge,
+          offer: offer || existingProduct.offer,
         images: updatedImages,
         model3D: newModelUrl
           ? newModelUrl
@@ -309,7 +313,8 @@ export const updateProduct = async (req, res) => {
           ? null
           : existingProduct.model3D,
       },
-      { new: true }
+      { new: true },
+    
     );
 
     res.status(200).json({

@@ -22,6 +22,7 @@ const productSchema = new mongoose.Schema(
     stockQuantity: { type: Number, default: 0, min: 0 },
     model3D: { type: String },
     badge: String,
+    offer: { type: String, default: "" },
 
   },
   { timestamps: true }
