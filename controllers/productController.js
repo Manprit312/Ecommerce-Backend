@@ -72,7 +72,7 @@ export const deleteProduct = async (req, res) => {
           const parts = url.split("/");
           const publicIdWithExt = parts.slice(-2).join("/"); // foldername/filename.jpg
           const publicId = publicIdWithExt.replace(/\.[^/.]+$/, ""); // remove .jpg or .png
-          
+
           await cloudinary.uploader.destroy(publicId);
         } catch (err) {
           console.error("⚠️ Error deleting image from Cloudinary:", err.message);
@@ -203,40 +203,40 @@ export const updateProduct = async (req, res) => {
     let newImageUrls = [];
     let newModelUrl = null;
 
-  if (req.files && req.files.length > 0) {
-  console.log("🧾 Received files:", req.files.map(f => f.originalname));
+    if (req.files && req.files.length > 0) {
+      console.log("🧾 Received files:", req.files.map(f => f.originalname));
 
-  const filesToUpload = req.files.filter(
-    (file) => (file?.buffer && file.buffer.length > 0) || file?.path
-  );
+      const filesToUpload = req.files.filter(
+        (file) => (file?.buffer && file.buffer.length > 0) || file?.path
+      );
 
-  const uploaded = await Promise.allSettled(
-    filesToUpload.map((file) => {
-      const is3D =
-        file.originalname.toLowerCase().endsWith(".glb") ||
-        file.originalname.toLowerCase().endsWith(".gltf");
+      const uploaded = await Promise.allSettled(
+        filesToUpload.map((file) => {
+          const is3D =
+            file.originalname.toLowerCase().endsWith(".glb") ||
+            file.originalname.toLowerCase().endsWith(".gltf");
 
-      const resourceType = is3D ? "raw" : "image"; // ✅ key difference
-      return uploadFromBuffer(file.buffer, resourceType);
-    })
-  );
+          const resourceType = is3D ? "raw" : "image"; // ✅ key difference
+          return uploadFromBuffer(file.buffer, resourceType);
+        })
+      );
 
-  uploaded.forEach((result, i) => {
-    const file = filesToUpload[i];
-    if (result.status === "fulfilled" && result.value?.secure_url) {
-      const is3D =
-        file.originalname.toLowerCase().endsWith(".glb") ||
-        file.originalname.toLowerCase().endsWith(".gltf");
+      uploaded.forEach((result, i) => {
+        const file = filesToUpload[i];
+        if (result.status === "fulfilled" && result.value?.secure_url) {
+          const is3D =
+            file.originalname.toLowerCase().endsWith(".glb") ||
+            file.originalname.toLowerCase().endsWith(".gltf");
 
-      if (is3D) newModelUrl = result.value.secure_url;
-      else newImageUrls.push(result.value.secure_url);
+          if (is3D) newModelUrl = result.value.secure_url;
+          else newImageUrls.push(result.value.secure_url);
+        }
+      });
+
+      if (newImageUrls.length > 0) {
+        updatedImages = [...new Set([...keptImages, ...newImageUrls])];
+      }
     }
-  });
-
-  if (newImageUrls.length > 0) {
-    updatedImages = [...new Set([...keptImages, ...newImageUrls])];
-  }
-}
 
 
     // ✅ Handle removed images
@@ -302,19 +302,21 @@ export const updateProduct = async (req, res) => {
           stockQuantity !== undefined
             ? Number(stockQuantity) > 0
             : inStock !== undefined
-            ? inStock === "true" || inStock === true
-            : existingProduct.inStock,
-        badge: badge || existingProduct.badge,
-          offer: offer || existingProduct.offer,
+              ? inStock === "true" || inStock === true
+              : existingProduct.inStock,
+       badge: badge ?? existingProduct.badge,
+
+
+        offer: offer || existingProduct.offer,
         images: updatedImages,
         model3D: newModelUrl
           ? newModelUrl
           : removeModel === "true"
-          ? null
-          : existingProduct.model3D,
+            ? null
+            : existingProduct.model3D,
       },
       { new: true },
-    
+
     );
 
     res.status(200).json({
