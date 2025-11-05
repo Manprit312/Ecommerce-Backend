@@ -77,13 +77,11 @@ export const deleteUser = async (req, res) => {
 
 // ✅ Add to Cart
 export const addToCart = async (req, res) => {
-  try {
-        console.log("hi")
-    const { uid, productId } = req.body;
+try {
+    const { uid, productId, quantity, image } = req.body;
 
-    if (!uid || !productId) {
+    if (!uid || !productId)
       return res.status(400).json({ message: "Missing user or product info" });
-    }
 
     const user = await User.findOne({ uid });
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -91,28 +89,25 @@ export const addToCart = async (req, res) => {
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ message: "Product not found" });
 
-    if (product.stockQuantity <= 0) {
-      return res.status(400).json({ message: "Product is out of stock" });
-    }
+    const qtyToAdd = quantity && quantity > 0 ? quantity : 1; // ✅ always use frontend quantity
 
-    // Check if product already in cart
     const existingItem = user.cart.items.find(
       (item) => item.productId.toString() === productId
     );
 
     if (existingItem) {
-      existingItem.quantity += 1;
+      existingItem.quantity += qtyToAdd; // ✅ increase by given quantity
     } else {
       user.cart.items.push({
-        productId: product._id,
+        productId,
         name: product.name,
         price: product.price,
-        image: product.images?.[0],
-        quantity: 1,
+        image: image ?? product.images?.[0],
+        quantity: qtyToAdd,     // ✅ set selected quantity
       });
     }
 
-    // Recalculate total count
+    // ✅ recalc total
     user.cart.totalCount = user.cart.items.reduce(
       (sum, item) => sum + item.quantity,
       0
@@ -120,7 +115,7 @@ export const addToCart = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: "Item added to cart", cart: user.cart });
+    res.status(200).json({ message: "Added to cart", cart: user.cart });
   } catch (error) {
     console.error("Error adding to cart:", error);
     res.status(500).json({ message: "Server error adding to cart" });

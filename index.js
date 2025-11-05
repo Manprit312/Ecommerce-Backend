@@ -14,6 +14,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import logoRoutes from "./routes/logoRoutes.js";
 import saleBannerRoutes from "./routes/saleBannerRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 dotenv.config();
 connectDB();
 
@@ -78,7 +79,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/logo", logoRoutes);
 app.use("/api/sale-banner", saleBannerRoutes)
 app.use("/api/", contactRoutes); 
-// ✅ For Render: run the app directly
+app.use("/api/payment", paymentRoutes);
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 

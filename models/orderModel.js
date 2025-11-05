@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: false, // for guest checkout
-    },
     customerName: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
@@ -16,6 +11,7 @@ const orderSchema = new mongoose.Schema(
 
     items: [
       {
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
         name: String,
         price: Number,
         quantity: Number,
@@ -23,28 +19,17 @@ const orderSchema = new mongoose.Schema(
       },
     ],
 
-    subtotal: { type: Number, required: true },
-    shipping: { type: Number, default: 0 },
-    totalAmount: { type: Number, required: true },
-
-    paymentMethod: {
-      type: String,
-      default: "Cash on Delivery", // Razorpay will update this later
-    },
-    paymentStatus: {
-      type: String,
-      enum: ["Pending", "Paid", "Failed"],
-      default: "Pending",
-    },
-
-    razorpayOrderId: { type: String }, // for later integration
-    razorpayPaymentId: { type: String },
-    razorpaySignature: { type: String },
+    subtotal: Number,
+    totalAmount: Number,
 
     status: {
       type: String,
-      enum: ["Processing", "Shipped", "Delivered", "Cancelled"],
-      default: "Processing",
+      default: "Pending", // Pending → Processing → Delivered
+    },
+
+    paymentMethod: {
+      type: String,
+      default: "Cash on Delivery",
     },
   },
   { timestamps: true }

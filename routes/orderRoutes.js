@@ -2,22 +2,22 @@ import express from "express";
 import {
   createOrder,
   getAllOrders,
+  getOrderDetails,
   getOrdersByUser,
   updateOrderStatus,
   deleteOrder,
-  getOrderDetails
 } from "../controllers/orderController.js";
 
 const router = express.Router();
 
-// Public (frontend)
-router.post("/", createOrder);
+// ✅ ORDER MATTERS! More specific route first
 
-// Admin
-router.get("/details/:id", getOrderDetails);
-router.get("/", getAllOrders);
-router.get("/:email", getOrdersByUser);
-router.put("/:id/status", updateOrderStatus);
+router.get("/user/:email", getOrdersByUser); // must be before :id
+
+router.post("/create", createOrder);         // POST /api/orders/create
+router.get("/", getAllOrders);               // GET /api/orders
+router.get("/:id", getOrderDetails);         // GET /api/orders/64323sdf
+router.patch("/:id", updateOrderStatus);
 router.delete("/:id", deleteOrder);
 
 export default router;
