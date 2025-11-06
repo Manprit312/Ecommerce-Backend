@@ -78,7 +78,7 @@ export const deleteUser = async (req, res) => {
 // ✅ Add to Cart
 export const addToCart = async (req, res) => {
 try {
-    const { uid, productId, quantity, image } = req.body;
+    const { uid, productId, quantity, image ,shippingCharge} = req.body;
 
     if (!uid || !productId)
       return res.status(400).json({ message: "Missing user or product info" });
@@ -104,12 +104,19 @@ try {
         price: product.price,
         image: image ?? product.images?.[0],
         quantity: qtyToAdd,     // ✅ set selected quantity
+        shippingCharge: shippingCharge ?? product.shippingCharge ?? 0,
       });
     }
 
     // ✅ recalc total
-    user.cart.totalCount = user.cart.items.reduce(
+     user.cart.totalCount = user.cart.items.reduce(
       (sum, item) => sum + item.quantity,
+      0
+    );
+
+    // ✅ Update total amount (products + shipping)
+    user.cart.totalAmount = user.cart.items.reduce(
+      (sum, item) => sum + item.price * item.quantity + (item.shippingCharge || 0),
       0
     );
 

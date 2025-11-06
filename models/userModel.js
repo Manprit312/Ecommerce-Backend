@@ -12,6 +12,7 @@ const cartItemSchema = new mongoose.Schema(
     price: { type: Number }, // optional, store product price at time of adding
     image: { type: String }, // optional thumbnail for quick display
     quantity: { type: Number, default: 1, min: 1 },
+    shippingCharge: { type: Number, default: 0 }, // optional shipping charge per item
   },
   { _id: false } // prevents generating _id for each cart item
 );

@@ -23,6 +23,9 @@ const productSchema = new mongoose.Schema(
     model3D: { type: String },
     badge: String,
     offer: { type: String, default: "" },
+    shipping: { type: String, default: "Free Shipping" },
+    returnPolicy: { type: String, default: "Easy Returns" },
+    warranty: { type: String, default: "1 Year Warranty" }
 
   },
   { timestamps: true }

@@ -31,6 +31,7 @@ export const createOrder = async (req, res) => {
       subtotal,
       totalAmount,
       paymentMethod: paymentMethod || "Cash on Delivery",
+      paymentStatus: paymentMethod === "Razorpay" ? "Paid" : "Pending", // ✅ Add thi
     });
 
     res.status(201).json({
@@ -73,6 +74,47 @@ export const getOrderDetails = async (req, res) => {
       .json({ message: "Failed to fetch order details", error: error.message });
   }
 };
+
+
+// ✅ Monthly Sales Report
+export const getMonthlyReport = async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    if (month === undefined || year === undefined) {
+      return res.status(400).json({ message: "Month & Year are required" });
+    }
+
+  const startDate = new Date(year, Number(month) - 1, 1);
+const endDate = new Date(year, Number(month), 1);
+
+    const orders = await Order.find({
+      createdAt: { $gte: startDate, $lt: endDate }
+    });
+
+    const totalOrders = orders.length;
+    const totalRevenue = orders.reduce((sum, o) => sum + o.totalAmount, 0);
+    const totalItemsSold = orders.reduce(
+      (sum, o) => sum + o.items.reduce((acc, i) => acc + i.quantity, 0),
+      0
+    );
+
+    res.status(200).json({
+      month,
+      year,
+      totalOrders,
+      totalRevenue,
+      totalItemsSold,
+      orders,
+    });
+  } catch (error) {
+    console.error("Monthly report error:", error);
+    res.status(500).json({ message: "Failed to fetch monthly report" });
+  }
+};
+
+
+
 
 // ✅ Get orders for a specific user
 export const getOrdersByUser = async (req, res) => {

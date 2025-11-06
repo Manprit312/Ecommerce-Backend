@@ -6,6 +6,7 @@ import {
   getOrdersByUser,
   updateOrderStatus,
   deleteOrder,
+  getMonthlyReport
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -13,7 +14,7 @@ const router = express.Router();
 // ✅ ORDER MATTERS! More specific route first
 
 router.get("/user/:email", getOrdersByUser); // must be before :id
-
+router.get("/monthly-report", getMonthlyReport);
 router.post("/create", createOrder);         // POST /api/orders/create
 router.get("/", getAllOrders);               // GET /api/orders
 router.get("/:id", getOrderDetails);         // GET /api/orders/64323sdf

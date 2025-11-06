@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const logoSchema = new mongoose.Schema(
   {
     logoUrl: { type: String, required: true },
+   description: { type: String, maxlength: 200, default: "" },
   },
   { timestamps: true }
 );
