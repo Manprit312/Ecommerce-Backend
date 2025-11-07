@@ -8,14 +8,10 @@ const productSchema = new mongoose.Schema(
     rating: { type: Number, default: 0 },
     reviews: { type: Number, default: 0 },
     description: { type: String },
-    specs: {
-      material: String,
-      dimensions: String,
-      weight: String,
-      power: String,
-      sensor: String,
-      colors: String,
-      features: [String],
+  specs: {
+      type: Map,        // <-- dynamic object
+      of: String,       // <-- key-value pairs
+      default: {}
     },
     images: [String],
     inStock: { type: Boolean, default: true },

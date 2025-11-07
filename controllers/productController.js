@@ -145,13 +145,21 @@ export const addProduct = async (req, res) => {
       const parsed = JSON.parse(categories);
       categoryIds = Array.isArray(parsed) ? parsed : [parsed];
     }
-
+let formattedSpecs = {};
+    if (specs) {
+      const parsedSpecs = JSON.parse(specs); // expect array of objects
+      if (Array.isArray(parsedSpecs)) {
+        parsedSpecs.forEach(({ key, value }) => {
+          if (key && value) formattedSpecs[key] = value;
+        });
+      }
+    }
     const productData = {
       name,
       price: parseFloat(price),
       description,
       categories: categoryIds,
-      specs: specs ? JSON.parse(specs) : {},
+     specs: formattedSpecs,
       rating: rating ? parseFloat(rating) : 0,
       reviews: reviews ? parseInt(reviews) : 0,
       inStock: inStock === "true" || inStock === true,
@@ -204,9 +212,24 @@ export const updateProduct = async (req, res) => {
       returnPolicy,
       warranty,
     } = req.body;
-
+ let formattedSpecs = existingProduct.specs;
+    if (specs) {
+      try {
+        const parsedSpecs = JSON.parse(specs);
+        if (Array.isArray(parsedSpecs)) {
+          formattedSpecs = {};
+          parsedSpecs.forEach(({ key, value }) => {
+            if (key && value) formattedSpecs[key] = value;
+          });
+        } else {
+          formattedSpecs = parsedSpecs;
+        }
+      } catch {
+        formattedSpecs = existingProduct.specs;
+      }
+    }
     const parsedCategories = categories ? JSON.parse(categories) : existingProduct.categories;
-    const parsedSpecs = specs ? JSON.parse(specs) : existingProduct.specs;
+    
     const keptImages = existingImages ? JSON.parse(existingImages) : existingProduct.images;
 
     let updatedImages = [...keptImages];
@@ -301,7 +324,7 @@ export const updateProduct = async (req, res) => {
         price: price ? parseFloat(price) : existingProduct.price,
         description: description || existingProduct.description,
         categories: parsedCategories,
-        specs: parsedSpecs,
+     specs: formattedSpecs,
         rating: rating ? parseFloat(rating) : existingProduct.rating,
         reviews: reviews ? parseInt(reviews) : existingProduct.reviews,
         stockQuantity:
