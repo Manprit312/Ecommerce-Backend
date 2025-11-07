@@ -130,9 +130,58 @@ try {
 };
 
 // ✅ Remove Item from Cart
+// export const removeFromCart = async (req, res) => {
+//   try {
+//     const { uid, productId } = req.body;
+
+//     if (!uid || !productId) {
+//       return res.status(400).json({ message: "Missing user or product ID" });
+//     }
+
+//     const user = await User.findOne({ uid });
+//     if (!user) return res.status(404).json({ message: "User not found" });
+
+//     let itemRemoved = false;
+
+//     // 🧩 Find the product in cart
+//     user.cart.items = user.cart.items.map((item) => {
+//       if (String(item.productId) === String(productId)) {
+//         if (item.quantity > 1) {
+//           // ➖ Decrease quantity by 1
+//           item.quantity -= 1;
+//         } else {
+//           // 🚮 Remove item later
+//           itemRemoved = true;
+//           return null;
+//         }
+//       }
+//       return item;
+//     }).filter(Boolean); // removes null if deleted
+
+//     // 🧮 Recalculate total count
+//     user.cart.totalCount = user.cart.items.reduce(
+//       (sum, item) => sum + (item.quantity || 0),
+//       0
+//     );
+
+//     user.markModified("cart");
+//     await user.save();
+
+//     res.status(200).json({
+//       message: itemRemoved
+//         ? "Item removed completely from cart"
+//         : "Item quantity decreased by 1",
+//       cart: user.cart,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error removing from cart:", error);
+//     res.status(500).json({ message: "Server error removing from cart" });
+//   }
+// };
+
 export const removeFromCart = async (req, res) => {
   try {
-    const { uid, productId } = req.body;
+    const { uid, productId, removeAll } = req.body;
 
     if (!uid || !productId) {
       return res.status(400).json({ message: "Missing user or product ID" });
@@ -141,41 +190,50 @@ export const removeFromCart = async (req, res) => {
     const user = await User.findOne({ uid });
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    let itemRemoved = false;
+    let removedCompletely = false;
 
-    // 🧩 Find the product in cart
-    user.cart.items = user.cart.items.map((item) => {
-      if (String(item.productId) === String(productId)) {
-        if (item.quantity > 1) {
-          // ➖ Decrease quantity by 1
-          item.quantity -= 1;
-        } else {
-          // 🚮 Remove item later
-          itemRemoved = true;
+    user.cart.items = user.cart.items
+      .map((item) => {
+        if (String(item.productId) === String(productId)) {
+          
+          // ✅ if removeAll is explicitly true -> delete item
+          if (removeAll === true) {
+            removedCompletely = true;
+            return null;
+          }
+
+          // ✅ if removeAll not passed OR false → decrease quantity
+          if ((item.quantity || 1) > 1) {
+            item.quantity -= 1;
+            return item;
+          }
+
+          // ✅ quantity was 1 → remove item
+          removedCompletely = true;
           return null;
         }
-      }
-      return item;
-    }).filter(Boolean); // removes null if deleted
+        return item;
+      })
+      .filter(Boolean); // Remove null entries
 
-    // 🧮 Recalculate total count
+    // ✅ Recalculate total count
     user.cart.totalCount = user.cart.items.reduce(
-      (sum, item) => sum + (item.quantity || 0),
+      (sum, item) => sum + (item.quantity || 1),
       0
     );
 
-    user.markModified("cart");
     await user.save();
 
-    res.status(200).json({
-      message: itemRemoved
-        ? "Item removed completely from cart"
-        : "Item quantity decreased by 1",
+    return res.status(200).json({
+      message: removedCompletely
+        ? "Item removed completely"
+        : "Item quantity updated",
       cart: user.cart,
     });
+
   } catch (error) {
     console.error("❌ Error removing from cart:", error);
-    res.status(500).json({ message: "Server error removing from cart" });
+    return res.status(500).json({ message: "Server error removing from cart" });
   }
 };
 
